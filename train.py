@@ -53,7 +53,7 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
         decoder_input = torch.cat(
             [decoder_input, torch.empty(1, 1).type_as(source).fill_(next_word.item()).to(device)], dim=1
         )
-        print(f'decoder_input: {decoder_input}')
+      
         if next_word == eos_idx:
             break
 
