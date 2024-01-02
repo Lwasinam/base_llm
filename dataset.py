@@ -29,7 +29,7 @@ class BilingualDataset(Dataset):
         src_target_pair = self.ds[idx]
         src_text = src_target_pair[self.src_lang]
         tgt_text = src_target_pair[self.tgt_lang]
-        print(f'text:{tgt_text}')
+       
         
 
        
@@ -78,7 +78,7 @@ class BilingualDataset(Dataset):
             dim=0,
         )
 
-        print(f'dec_{len(dec_input_tokens)}')
+       
         # Double check the size of the tensors to make sure they are all seq_len long
         assert encoder_input.size(0) == self.seq_len
         assert decoder_input.size(0) == self.seq_len
