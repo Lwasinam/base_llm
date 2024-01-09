@@ -23,6 +23,8 @@ from tokenizers.pre_tokenizers import Whitespace
 import torchmetrics
 from torch.utils.tensorboard import SummaryWriter
 
+import wandb
+
 def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text):
     sos_idx = tokenizer_tgt.token_to_id("[SOS]")
     eos_idx = tokenizer_tgt.token_to_id("[EOS]")
@@ -163,8 +165,8 @@ def get_ds(config):
     val_ds_size = len(ds_raw) - train_ds_size
     train_ds_raw, val_ds_raw = random_split(ds_raw, [train_ds_size, val_ds_size])
 
-    train_ds = BilingualDataset(train_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'])
-    val_ds = BilingualDataset(val_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'])
+    train_ds = BilingualDataset(train_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
+    val_ds = BilingualDataset(val_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
 
     # Find the maximum length of each sentence in the source and target sentence
     max_len_src = 0
@@ -185,9 +187,20 @@ def get_ds(config):
 
     return train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt
 
-def get_model(config, vocab_src_len, vocab_tgt_len):
-    model = build_transformer( config['seq_len'],config['batch_size'], vocab_tgt_len,vocab_src_len, config['d_model'] )
+def get_model(config, vocab_src_len, vocab_tgt_len, device):
+    model = build_transformer( config['seq_len'],config['batch_size'], vocab_tgt_len,vocab_src_len, config['d_model'], device )
     return model
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+#wandb initialization
+wandb.login(key = 'c20a1022142595d7d1324fdc53b3ccb34c0ded22')
+wandb.init(project="Afri-lm", name="test1")
+
+# Initialize WandB configuration
+wandb.config.epochs = config['num_epochs']
+wandb.config.batch_size = config['batch_size']
+wandb.config.learning_rate = config['learning_rate']  
 
 def train_model(config):
     # Define the device
@@ -198,7 +211,10 @@ def train_model(config):
     Path(config['model_folder']).mkdir(parents=True, exist_ok=True)
 
     train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt = get_ds(config)
-    model = get_model(config, tokenizer_src.get_vocab_size(), tokenizer_tgt.get_vocab_size()).to(device)
+    model = get_model(config, tokenizer_src.get_vocab_size(), tokenizer_tgt.get_vocab_size(), device).to(device)
+
+    #no of params
+    print(f'The model has {count_parameters(model):,} trainable parameters')
     # Tensorboard
     writer = SummaryWriter(config['experiment_name'])
 
@@ -245,6 +261,7 @@ def train_model(config):
        
             loss = loss_fn(proj_output.view(-1, tokenizer_tgt.get_vocab_size()), label.view(-1))
             batch_iterator.set_postfix({"loss": f"{loss.item():6.3f}"})
+            wandb.log({"Training Loss": loss.item(), "Global Step": global_step})
 
             # Log the loss
             writer.add_scalar('train loss', loss.item(), global_step)
@@ -288,6 +305,7 @@ def train_model(config):
                 
         avg_val_loss = eval_loss / len(val_dataloader)
         print(f'Epoch {epoch},Validation Loss: {avg_val_loss.item()}')
+        wandb.log({"Epoch": epoch, "Validation Loss": avg_val_loss.item()})
 
 
         # Run validation at the end of every epoch

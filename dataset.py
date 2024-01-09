@@ -4,7 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 
 class BilingualDataset(Dataset):
-    def __init__(self, ds, tokenizer_src, tokenizer_tgt, src_lang, tgt_lang, seq_len):
+    def __init__(self, ds, tokenizer_src, tokenizer_tgt, src_lang, tgt_lang, seq_len, sliding_window):
         super().__init__()
         self.seq_len = seq_len
 
@@ -13,6 +13,7 @@ class BilingualDataset(Dataset):
         self.tokenizer_tgt = tokenizer_tgt
         self.src_lang = src_lang
         self.tgt_lang = tgt_lang
+        self.sliding_window = sliding_window
 
         self.sos_token = torch.tensor([tokenizer_tgt.token_to_id("[SOS]")], dtype=torch.int64)
         self.eos_token = torch.tensor([tokenizer_tgt.token_to_id("[EOS]")], dtype=torch.int64)
@@ -87,7 +88,7 @@ class BilingualDataset(Dataset):
             'encoder_input': encoder_input,
             'decoder_input': decoder_input,
             "encoder_mask": (encoder_input != self.pad_token).unsqueeze(0).unsqueeze(0).int(), # (1, 1, seq_len)
-            "decoder_mask": (decoder_input != self.pad_token).unsqueeze(0).int() & causal_mask(decoder_input.size(0)), # (1, seq_len) & (1, seq_len, seq_len),
+            "decoder_mask": (decoder_input != self.pad_token).unsqueeze(0).int() & causal_mask(decoder_input.size(0)) & sliding_mask(decoder_input.size(0),self.sliding_window), # (1, seq_len) & (1, seq_len, seq_len),
             "label": label,  # (seq_len)
              
             "src_text": src_text,
@@ -99,4 +100,7 @@ class BilingualDataset(Dataset):
 def causal_mask(size):
     mask = torch.triu(torch.ones((1, size, size)), diagonal=1).type(torch.int)
     return mask == 0
+def sliding_mask(size, sliding_window):
+    mask = torch.triu(torch.ones((1, size, size)), diagonal=-(sliding_window-1)).type(torch.int)
+    return mask == 1    
         
