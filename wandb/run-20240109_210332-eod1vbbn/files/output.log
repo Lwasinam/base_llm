@@ -1,0 +1,63 @@
+
+Using device: cpu
+{'0': 'The earth was formless and empty, and darkness covered the deep waters. And the Spirit of God was hovering over the surface of the waters.   ', '1': 'To, ƙasa dai ba ta da siffa, babu kuma kome a cikinta, duhu ne kawai ya rufe ko’ina, Ruhun Allah kuwa yana yawo a kan ruwan.   '}
+Max length of source sentence: 136
+Max length of target sentence: 107
+The model has 43,917,395 trainable parameters
+x_shapetorch.Size([1, 150, 1, 32]) and torch.Size([1, 2, 8, 32])
+Traceback (most recent call last):
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 329, in <module>
+    train_model(config)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 239, in train_model
+    run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, 'l', 1)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 94, in run_validation
+    model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 48, in greedy_decode
+    out =model.decode(decoder_input, decoder_mask)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 291, in decode
+    return self.decoder(x, freqs_complex_form, tgt_mask,)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 263, in forward
+    x = decoder_block(x,freqs_complex_form, tgt_mask)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 240, in forward
+    attention = self.multiheadattention(norm, norm, norm,freqs_complex_form, tgt_mask)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 163, in forward
+    attention = MultiHeadAttention.self_attention(self, query, key, value,freqs_complex_form, mask, self.dropout)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 141, in self_attention
+    query = apply_rotary_pos_encoding(query, freqs_complex_form, self.device).transpose(2,1)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 108, in apply_rotary_pos_encoding
+    x_rotated = x_complex * freqs_complex_form
+RuntimeError: The size of tensor a (2) must match the size of tensor b (150) at non-singleton dimension 1
+Traceback (most recent call last):
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 329, in <module>
+    train_model(config)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 239, in train_model
+    run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, 'l', 1)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 94, in run_validation
+    model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 48, in greedy_decode
+    out =model.decode(decoder_input, decoder_mask)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 291, in decode
+    return self.decoder(x, freqs_complex_form, tgt_mask,)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 263, in forward
+    x = decoder_block(x,freqs_complex_form, tgt_mask)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 240, in forward
+    attention = self.multiheadattention(norm, norm, norm,freqs_complex_form, tgt_mask)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 163, in forward
+    attention = MultiHeadAttention.self_attention(self, query, key, value,freqs_complex_form, mask, self.dropout)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 141, in self_attention
+    query = apply_rotary_pos_encoding(query, freqs_complex_form, self.device).transpose(2,1)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 108, in apply_rotary_pos_encoding
+    x_rotated = x_complex * freqs_complex_form
+RuntimeError: The size of tensor a (2) must match the size of tensor b (150) at non-singleton dimension 1

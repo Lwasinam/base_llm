@@ -1,0 +1,35 @@
+2024-01-10 01:18:00,041 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Current SDK version is 0.16.1
+2024-01-10 01:18:00,041 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Configure stats pid to 70718
+2024-01-10 01:18:00,041 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Loading settings from /home/lwasinam/.config/wandb/settings
+2024-01-10 01:18:00,041 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Loading settings from /home/lwasinam/AI_Projects/base_llm/wandb/settings
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'train.py', 'program_abspath': '/home/lwasinam/AI_Projects/base_llm/train.py', 'program': '/home/lwasinam/AI_Projects/base_llm/train.py'}
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_init.py:_log_setup():524] Logging user logs to /home/lwasinam/AI_Projects/base_llm/wandb/run-20240110_011800-f0exlxt1/logs/debug.log
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_init.py:_log_setup():525] Logging internal logs to /home/lwasinam/AI_Projects/base_llm/wandb/run-20240110_011800-f0exlxt1/logs/debug-internal.log
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_init.py:init():564] calling init triggers
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_init.py:init():571] wandb.init called with sweep_config: {}
+config: {}
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_init.py:init():614] starting backend
+2024-01-10 01:18:00,042 INFO    MainThread:70718 [wandb_init.py:init():618] setting up manager
+2024-01-10 01:18:00,044 INFO    MainThread:70718 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-01-10 01:18:00,045 INFO    MainThread:70718 [wandb_init.py:init():624] backend started and connected
+2024-01-10 01:18:00,047 INFO    MainThread:70718 [wandb_init.py:init():716] updated telemetry
+2024-01-10 01:18:00,055 INFO    MainThread:70718 [wandb_init.py:init():749] communicating run to backend with 90.0 second timeout
+2024-01-10 01:18:01,072 INFO    MainThread:70718 [wandb_run.py:_on_init():2254] communicating current version
+2024-01-10 01:18:02,802 INFO    MainThread:70718 [wandb_run.py:_on_init():2263] got version response upgrade_message: "wandb version 0.16.2 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2024-01-10 01:18:02,802 INFO    MainThread:70718 [wandb_init.py:init():800] starting run threads in backend
+2024-01-10 01:18:02,842 INFO    MainThread:70718 [wandb_run.py:_console_start():2233] atexit reg
+2024-01-10 01:18:02,842 INFO    MainThread:70718 [wandb_run.py:_redirect():2088] redirect: wrap_raw
+2024-01-10 01:18:02,843 INFO    MainThread:70718 [wandb_run.py:_redirect():2153] Wrapping output streams.
+2024-01-10 01:18:02,843 INFO    MainThread:70718 [wandb_run.py:_redirect():2178] Redirects installed.
+2024-01-10 01:18:02,844 INFO    MainThread:70718 [wandb_init.py:init():841] run started, returning control to user process
+2024-01-10 01:18:02,844 INFO    MainThread:70718 [wandb_config.py:__setitem__():151] config set epochs = 100 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7f1f04255c30>>
+2024-01-10 01:18:02,844 INFO    MainThread:70718 [wandb_run.py:_config_callback():1342] config_cb epochs 100 None
+2024-01-10 01:18:02,845 INFO    MainThread:70718 [wandb_config.py:__setitem__():151] config set batch_size = 2 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7f1f04255c30>>
+2024-01-10 01:18:02,845 INFO    MainThread:70718 [wandb_run.py:_config_callback():1342] config_cb batch_size 2 None
+2024-01-10 01:18:02,845 INFO    MainThread:70718 [wandb_config.py:__setitem__():151] config set learning_rate = 0.0001 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7f1f04255c30>>
+2024-01-10 01:18:02,846 INFO    MainThread:70718 [wandb_run.py:_config_callback():1342] config_cb learning_rate 0.0001 None
+2024-01-10 01:18:28,868 WARNING MsgRouterThr:70718 [router.py:message_loop():77] message_loop has been closed

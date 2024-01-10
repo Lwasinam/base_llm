@@ -1,5 +1,5 @@
 from model import build_transformer
-from dataset import BilingualDataset, causal_mask
+from dataset import BilingualDataset, causal_mask, sliding_mask
 from config import get_config, get_weights_file_path
 
 import torchtext.datasets as datasets
@@ -25,7 +25,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 import wandb
 
-def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text):
+def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text,sliding_window):
     sos_idx = tokenizer_tgt.token_to_id("[SOS]")
     eos_idx = tokenizer_tgt.token_to_id("[EOS]")
     first_word = tokenizer_tgt.encode(target_text).ids[0]
@@ -41,7 +41,7 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
         if decoder_input.size(1) == max_len:
             break
         # build mask for target
-        decoder_mask = causal_mask(decoder_input.size(1)).type_as(source_mask).to(device)
+        decoder_mask = (causal_mask(decoder_input.size(1)) & sliding_mask(decoder_input.size(1),sliding_window)).type_as(source_mask).to(device)
       
 
         # calculate output
@@ -62,7 +62,7 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
     return decoder_input.squeeze(0)
 
 
-def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len, device, print_msg, global_step,num_examples=2):
+def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len, device, print_msg, global_step,sliding_window,num_examples=2):
     model.eval()
     count = 0
 
@@ -91,7 +91,7 @@ def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len, 
             
             source_text = batch["src_text"][0]
             target_text = batch["tgt_text"][0]
-            model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text)
+            model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text,sliding_window)
 
             # source_text = batch["src_text"][0]
             # target_text = batch["tgt_text"][0]
@@ -193,16 +193,18 @@ def get_model(config, vocab_src_len, vocab_tgt_len, device):
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-#wandb initialization
-wandb.login(key = 'c20a1022142595d7d1324fdc53b3ccb34c0ded22')
-wandb.init(project="Afri-lm", name="test1")
 
-# Initialize WandB configuration
-wandb.config.epochs = config['num_epochs']
-wandb.config.batch_size = config['batch_size']
-wandb.config.learning_rate = config['learning_rate']  
 
 def train_model(config):
+
+    #wandb initialization
+    wandb.login(key = 'c20a1022142595d7d1324fdc53b3ccb34c0ded22')
+    wandb.init(project="Afri-lm", name="test1")
+
+    # Initialize WandB configuration
+    wandb.config.epochs = config['num_epochs']
+    wandb.config.batch_size = config['batch_size']
+    wandb.config.learning_rate = config['lr']  
     # Define the device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
@@ -234,7 +236,6 @@ def train_model(config):
 
     loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_src.token_to_id("[PAD]"), label_smoothing=0.1).to(device)
  
-
     for epoch in range(initial_epoch, config['num_epochs']):
         model.train()
         batch_iterator = tqdm(train_dataloader, desc=f"Processing Epoch {epoch:02d}")
@@ -309,7 +310,7 @@ def train_model(config):
 
 
         # Run validation at the end of every epoch
-        run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step)
+        run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, config['sliding_window_size'])
 
         # Save the model at the end of every epoch
         model_filename = get_weights_file_path(config, f"{epoch:02d}")

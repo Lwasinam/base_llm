@@ -1,0 +1,18 @@
+
+Using device: cpu
+{'0': 'The earth was formless and empty, and darkness covered the deep waters. And the Spirit of God was hovering over the surface of the waters.   ', '1': 'To, ƙasa dai ba ta da siffa, babu kuma kome a cikinta, duhu ne kawai ya rufe ko’ina, Ruhun Allah kuwa yana yawo a kan ruwan.   '}
+Max length of source sentence: 136
+Max length of target sentence: 107
+The model has 43,917,395 trainable parameters
+Traceback (most recent call last):
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 329, in <module>
+    train_model(config)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 239, in train_model
+    run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device)
+TypeError: run_validation() missing 2 required positional arguments: 'print_msg' and 'global_step'
+Traceback (most recent call last):
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 329, in <module>
+    train_model(config)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 239, in train_model
+    run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device)
+TypeError: run_validation() missing 2 required positional arguments: 'print_msg' and 'global_step'

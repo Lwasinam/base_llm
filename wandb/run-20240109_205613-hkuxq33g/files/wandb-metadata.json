@@ -1,0 +1,60 @@
+{
+    "os": "Linux-6.2.0-39-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "heartbeatAt": "2024-01-09T19:56:16.216268",
+    "startedAt": "2024-01-09T19:56:13.638742",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/lwasinam/AI_Projects/base_llm/train.py",
+    "codePathLocal": "train.py",
+    "codePath": "train.py",
+    "git": {
+        "remote": "https://github.com/Lwasinam/base_llm.git",
+        "commit": "821ea15c5308993054544abda25268d3b5ce8450"
+    },
+    "email": "lwasinamdilli@gmail.com",
+    "root": "/home/lwasinam/AI_Projects/base_llm",
+    "host": "elitebook",
+    "username": "lwasinam",
+    "executable": "/bin/python3",
+    "cpu_count": 2,
+    "cpu_count_logical": 4,
+    "cpu_freq": {
+        "current": 2431.133,
+        "min": 500.0,
+        "max": 2900.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2607.431,
+            "min": 500.0,
+            "max": 2900.0
+        },
+        {
+            "current": 2625.633,
+            "min": 500.0,
+            "max": 2900.0
+        },
+        {
+            "current": 2554.338,
+            "min": 500.0,
+            "max": 2900.0
+        },
+        {
+            "current": 2576.364,
+            "min": 500.0,
+            "max": 2900.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 221.69247436523438,
+            "used": 148.01522064208984
+        }
+    },
+    "memory": {
+        "total": 15.487861633300781
+    }
+}

@@ -285,7 +285,8 @@ class Transformer(nn.Module):
     #     return self.encoder(x, src_mask)
        
     def decode(self,x, tgt_mask):
-        freqs_complex_form = pre_compute_theta(self.d_model/self.head, self.d_model, self.seq_len, self.device)
+
+        freqs_complex_form = pre_compute_theta(self.d_model/self.head, self.d_model, x.shape[1], self.device)
         x = self.target_embedding(x)
         # x = self.positional_encoding(x)
         return self.decoder(x, freqs_complex_form, tgt_mask,)
