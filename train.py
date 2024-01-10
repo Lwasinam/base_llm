@@ -174,18 +174,18 @@ def get_ds(config):
     train_ds = BilingualDataset(ds_raw['train'], tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
     val_ds = BilingualDataset(ds_raw['validation'], tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
 
-    # Find the maximum length of each sentence in the source and target sentence
-    max_len_src = 0
-    max_len_tgt = 0
+    # # Find the maximum length of each sentence in the source and target sentence
+    # max_len_src = 0
+    # max_len_tgt = 0
 
-    for item in ds_raw['train']:
-        # src_ids = tokenizer_src.encode(item[config['lang_src']]).ids
-        tgt_ids = tokenizer_tgt.encode(item['content']).ids
-        # max_len_src = max(max_len_src, len(src_ids))
-        max_len_tgt = max(max_len_tgt, len(tgt_ids))
+    # for item in ds_raw['train']:
+    #     # src_ids = tokenizer_src.encode(item[config['lang_src']]).ids
+    #     tgt_ids = tokenizer_tgt.encode(item['content']).ids
+    #     # max_len_src = max(max_len_src, len(src_ids))
+    #     max_len_tgt = max(max_len_tgt, len(tgt_ids))
 
-    # print(f'Max length of source sentence: {max_len_src}')
-    print(f'Max length of target sentence: {max_len_tgt}')
+    # # print(f'Max length of source sentence: {max_len_src}')
+    # print(f'Max length of target sentence: {max_len_tgt}')
     
 
     train_dataloader = DataLoader(train_ds, batch_size=config['batch_size'], shuffle=True)
