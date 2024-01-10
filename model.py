@@ -266,7 +266,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, source_vocab_size:int,device:str, head: int = 8, d_ff: int =  2048, number_of_block: int = 6) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int,device:str, head: int = 8, d_ff: int =  2048, number_of_block: int = 6) -> None:
         super(Transformer, self).__init__()
         # self.encoder = Encoder(number_of_block,d_model, head, d_ff )
         print(f'no. of layers {number_of_block}')
@@ -276,8 +276,8 @@ class Transformer(nn.Module):
         self.device = device
         self.decoder = Decoder(number_of_block, d_model, head, d_ff, device )
         self.projection = ProjectionLayer(d_model, target_vocab_size)
-        self.source_embedding = InputEmbeddings(d_model,source_vocab_size )
-        self.target_embedding = InputEmbeddings(d_model,target_vocab_size)
+        # self.source_embedding = InputEmbeddings(d_model,source_vocab_size )
+        # self.target_embedding = InputEmbeddings(d_model,target_vocab_size)
         self.positional_encoding = PositionEncoding(seq_len, d_model, batch)
 
    
@@ -298,10 +298,10 @@ class Transformer(nn.Module):
         
 
 
-def build_transformer(seq_len, batch, target_vocab_size, source_vocab_size,  d_model, device)-> Transformer:
+def build_transformer(seq_len, batch, target_vocab_size,  d_model, device)-> Transformer:
     
 
-    transformer = Transformer(seq_len, batch,  d_model,  target_vocab_size, source_vocab_size, device )
+    transformer = Transformer(seq_len, batch,  d_model,  target_vocab_size, device )
 
       #Initialize the parameters
     for p in transformer.parameters():
