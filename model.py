@@ -277,7 +277,7 @@ class Transformer(nn.Module):
         self.decoder = Decoder(number_of_block, d_model, head, d_ff, device )
         self.projection = ProjectionLayer(d_model, target_vocab_size)
         # self.source_embedding = InputEmbeddings(d_model,source_vocab_size )
-        # self.target_embedding = InputEmbeddings(d_model,target_vocab_size)
+        self.target_embedding = InputEmbeddings(d_model,target_vocab_size)
         self.positional_encoding = PositionEncoding(seq_len, d_model, batch)
 
    
