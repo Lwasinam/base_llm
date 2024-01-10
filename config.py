@@ -4,10 +4,10 @@ def get_config():
     return {
         "batch_size":2,
         "num_epochs": 100,
-        'sliding_window_size': 5,
+        'sliding_window_size': 512,
         "lr": 10**-4,
-        "seq_len": 150,
-        "d_model": 512,
+        "seq_len": 3072,
+        "d_model": 1024,
         "lang_src": "0",
         "lang_tgt": "1",
         "model_folder": "weights",
