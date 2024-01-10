@@ -27,26 +27,26 @@ class BilingualDataset(Dataset):
      
 
         
-        src_target_pair = self.ds[idx]
-        src_text = src_target_pair[self.src_lang]
-        tgt_text = src_target_pair[self.tgt_lang]
+        tgt_text = self.ds[idx]['content']
+        # src_text = src_target_pair[self.src_lang]
+        # tgt_text = src_target_pair[self.tgt_lang]
        
         
 
        
      
 
-        # Transform the text into tokens
-        enc_input_tokens = self.tokenizer_src.encode(src_text).ids
+        # # Transform the text into tokens
+        # enc_input_tokens = self.tokenizer_src.encode(src_text).ids
         dec_input_tokens = self.tokenizer_tgt.encode(tgt_text).ids
 
-        # Add sos, eos and padding to each sentence
-        enc_num_padding_tokens = self.seq_len - len(enc_input_tokens) - 2  # We will add <s> and </s>
+        # # Add sos, eos and padding to each sentence
+        # enc_num_padding_tokens = self.seq_len - len(enc_input_tokens) - 2  # We will add <s> and </s>
         # We will only add <s>, and </s> only on the label
         dec_num_padding_tokens = self.seq_len - len(dec_input_tokens) 
 
         # Make sure the number of padding tokens is not negative. If it is, the sentence is too long
-        if enc_num_padding_tokens < 0 or dec_num_padding_tokens < 0:
+        if dec_num_padding_tokens < 0:
             raise ValueError("Sentence is too long")
 
         # Add <s> and </s> token
@@ -80,18 +80,18 @@ class BilingualDataset(Dataset):
         )
 
        
-        # Double check the size of the tensors to make sure they are all seq_len long
-        assert encoder_input.size(0) == self.seq_len
+        # # Double check the size of the tensors to make sure they are all seq_len long
+        # assert encoder_input.size(0) == self.seq_len
         assert decoder_input.size(0) == self.seq_len
         assert label.size(0) == self.seq_len
         return {
-            'encoder_input': encoder_input,
+            # 'encoder_input': encoder_input,
             'decoder_input': decoder_input,
-            "encoder_mask": (encoder_input != self.pad_token).unsqueeze(0).unsqueeze(0).int(), # (1, 1, seq_len)
+            # "encoder_mask": (encoder_input != self.pad_token).unsqueeze(0).unsqueeze(0).int(), # (1, 1, seq_len)
             "decoder_mask": (decoder_input != self.pad_token).unsqueeze(0).int() & causal_mask(decoder_input.size(0)) & sliding_mask(decoder_input.size(0),self.sliding_window), # (1, seq_len) & (1, seq_len, seq_len),
             "label": label,  # (seq_len)
              
-            "src_text": src_text,
+            # "src_text": src_text,
             "tgt_text": tgt_text,
         }
 
