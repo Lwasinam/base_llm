@@ -4,12 +4,11 @@ from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 
 class BilingualDataset(Dataset):
-    def __init__(self, ds, tokenizer_src, tokenizer_tgt, src_lang, tgt_lang, seq_len, sliding_window):
+    def __init__(self, ds, tokenizer_tgt, src_lang, tgt_lang, seq_len, sliding_window):
         super().__init__()
         self.seq_len = seq_len
 
         self.ds = ds
-        self.tokenizer_src = tokenizer_src
         self.tokenizer_tgt = tokenizer_tgt
         self.src_lang = src_lang
         self.tgt_lang = tgt_lang
@@ -49,16 +48,16 @@ class BilingualDataset(Dataset):
         if dec_num_padding_tokens < 0:
             raise ValueError("Sentence is too long")
 
-        # Add <s> and </s> token
-        encoder_input = torch.cat(
-            [
-                self.sos_token,
-                torch.tensor(enc_input_tokens, dtype=torch.int64),
-                self.eos_token,
-                torch.tensor([self.pad_token] * enc_num_padding_tokens, dtype=torch.int64),
-            ],
-            dim=0,
-        )
+        # # Add <s> and </s> token
+        # encoder_input = torch.cat(
+        #     [
+        #         self.sos_token,
+        #         torch.tensor(enc_input_tokens, dtype=torch.int64),
+        #         self.eos_token,
+        #         torch.tensor([self.pad_token] * enc_num_padding_tokens, dtype=torch.int64),
+        #     ],
+        #     dim=0,
+        # )
 
         # Add only <s> token
         decoder_input = torch.cat(

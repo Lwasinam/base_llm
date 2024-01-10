@@ -171,8 +171,8 @@ def get_ds(config):
     # val_ds_size = len(ds_raw) - train_ds_size
     # train_ds_raw, val_ds_raw = random_split(ds_raw, [train_ds_size, val_ds_size])
 
-    train_ds = BilingualDataset(ds_raw['train'], tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
-    val_ds = BilingualDataset(ds_raw['validation'], tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
+    train_ds = BilingualDataset(ds_raw['train'], tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
+    val_ds = BilingualDataset(ds_raw['validation'], tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'], config['sliding_window_size'])
 
     # Find the maximum length of each sentence in the source and target sentence
     max_len_src = 0
@@ -191,10 +191,10 @@ def get_ds(config):
     train_dataloader = DataLoader(train_ds, batch_size=config['batch_size'], shuffle=True)
     val_dataloader = DataLoader(val_ds, batch_size=1, shuffle=True)
 
-    return train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt
+    return train_dataloader, val_dataloader, tokenizer_tgt
 
-def get_model(config, vocab_src_len, vocab_tgt_len, device):
-    model = build_transformer( config['seq_len'],config['batch_size'], vocab_tgt_len,vocab_src_len, config['d_model'], device )
+def get_model(config,vocab_tgt_len, device):
+    model = build_transformer( config['seq_len'],config['batch_size'], vocab_tgt_len, config['d_model'], device )
     return model
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -218,8 +218,8 @@ def train_model(config):
     # Make sure the weights folder exists
     Path(config['model_folder']).mkdir(parents=True, exist_ok=True)
 
-    train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt = get_ds(config)
-    model = get_model(config, tokenizer_src.get_vocab_size(), tokenizer_tgt.get_vocab_size(), device).to(device)
+    train_dataloader, val_dataloader, tokenizer_tgt = get_ds(config)
+    model = get_model(config, tokenizer_tgt.get_vocab_size(), device).to(device)
 
     #no of params
     print(f'The model has {count_parameters(model):,} trainable parameters')
@@ -240,7 +240,7 @@ def train_model(config):
         optimizer.load_state_dict(state['optimizer_state_dict'])
         global_step = state['global_step']
 
-    loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_src.token_to_id("[PAD]"), label_smoothing=0.1).to(device)
+    loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_tgt.token_to_id("[PAD]"), label_smoothing=0.1).to(device)
  
     for epoch in range(initial_epoch, config['num_epochs']):
         model.train()
