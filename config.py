@@ -7,7 +7,7 @@ def get_config():
         'sliding_window_size': 512,
         "lr": 10**-4,
         "seq_len": 6144,
-        "d_model": 768,
+        "d_model": 512,
         "lang_src": "0",
         "lang_tgt": "1",
         "model_folder": "weights",
