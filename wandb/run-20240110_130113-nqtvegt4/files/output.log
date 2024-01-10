@@ -1,0 +1,47 @@
+
+Using device: cpu
+{'0': 'The earth was formless and empty, and darkness covered the deep waters. And the Spirit of God was hovering over the surface of the waters.   ', '1': 'To, ƙasa dai ba ta da siffa, babu kuma kome a cikinta, duhu ne kawai ya rufe ko’ina, Ruhun Allah kuwa yana yawo a kan ruwan.   '}
+Max length of source sentence: 136
+Max length of target sentence: 107
+The model has 43,917,395 trainable parameters
+Processing Epoch 00:   0%|                                                                                                                                                                       | 0/39664 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 328, in <module>
+    train_model(config)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 253, in train_model
+    decoder_output = model.decode( decoder_input, decoder_mask) # (B, seq_len, d_model)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 293, in decode
+    return self.decoder(x, freqs_complex_form, tgt_mask,)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 264, in forward
+    x = decoder_block(x,freqs_complex_form, tgt_mask)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 251, in forward
+    ff = self.feedforward(norm3)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 177, in forward
+    return self.fc2(silu(self.fc1(x)))
+NameError: name 'silu' is not defined
+Traceback (most recent call last):
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 328, in <module>
+    train_model(config)
+  File "/home/lwasinam/AI_Projects/base_llm/train.py", line 253, in train_model
+    decoder_output = model.decode( decoder_input, decoder_mask) # (B, seq_len, d_model)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 293, in decode
+    return self.decoder(x, freqs_complex_form, tgt_mask,)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 264, in forward
+    x = decoder_block(x,freqs_complex_form, tgt_mask)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 251, in forward
+    ff = self.feedforward(norm3)
+  File "/home/lwasinam/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/lwasinam/AI_Projects/base_llm/model.py", line 177, in forward
+    return self.fc2(silu(self.fc1(x)))
+NameError: name 'silu' is not defined

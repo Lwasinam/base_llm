@@ -170,10 +170,11 @@ class FeedForward(nn.Module):
         self.fc1 = nn.Linear(d_model, d_ff)  # Fully connected layer 1
         self.dropout = nn.Dropout(p=0.1)  # Dropout layer
         self.fc2 = nn.Linear(d_ff, d_model)  # Fully connected layer 2
+        self.silu = nn.SiLU()
      
     
     def forward(self,x ):
-        return self.fc2(self.dropout(torch.relu(self.fc1(x))))  
+        return self.fc2(self.silu(self.fc1(x)))  
 
 class ProjectionLayer(nn.Module):
     def __init__(self, d_model:int, vocab_size:int) :
@@ -268,6 +269,7 @@ class Transformer(nn.Module):
     def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, source_vocab_size:int,device:str, head: int = 8, d_ff: int =  2048, number_of_block: int = 6) -> None:
         super(Transformer, self).__init__()
         # self.encoder = Encoder(number_of_block,d_model, head, d_ff )
+        print(f'no. of layers {number_of_block}')
         self.d_model = d_model
         self.head = head  
         self.seq_len = seq_len
