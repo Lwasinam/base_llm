@@ -142,7 +142,7 @@ def batch_iterator(data):
 
 
 def get_or_build_tokenizer(config, ds):
-    tokenizer_path = Path(config['tokenizer_file'].format(lang))
+    tokenizer_path = Path(config['tokenizer_file'])
     if not Path.exists(tokenizer_path):
         # Most code taken from: https://huggingface.co/docs/tokenizers/quicktour
         tokenizer = Tokenizer(WordLevel(unk_token="[UNK]"))
