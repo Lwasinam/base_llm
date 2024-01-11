@@ -44,7 +44,7 @@ class BilingualDataset(Dataset):
 
         if len(dec_input_tokens) == 0:
         # Return None or any appropriate value to indicate skipping
-            dec_num_padding_tokens == self.seq_len-1
+            dec_num_padding_tokens = self.seq_len-1
         else:
         # # Add sos, eos and padding to each sentence
         # enc_num_padding_tokens = self.seq_len - len(enc_input_tokens) - 2  # We will add <s> and </s>
