@@ -82,7 +82,7 @@ class BilingualDataset(Dataset):
        
         # # Double check the size of the tensors to make sure they are all seq_len long
         # assert encoder_input.size(0) == self.seq_len
-        print(f'decoder_input size: {decoder_input.size(0)} and seq {self.seq_len}')
+        print(f'decoder_input size: {decoder_input.size(0)} and seq {len(dec_input_tokens)}')
         assert decoder_input.size(0) == self.seq_len
         assert label.size(0) == self.seq_len
         return {
