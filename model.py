@@ -41,7 +41,7 @@ class RMSNorm(nn.Module):
 
 
         # eps is to prevent dividing by zero or when sqrt_mean is very small
-        return self.alpha * (x ) / (sqrt_mean + self.eps)        
+        return self.alpha * ((x ) / (sqrt_mean + self.eps))       
 
 
 
@@ -145,7 +145,8 @@ class MultiHeadAttention(nn.Module):
         attention = attention / math.sqrt(query.shape[-1])
 
         if mask is not None:
-           attention = attention.masked_fill(mask == 0, -1e9)      
+           attention = attention.masked_fill(mask == 0, -1e9)
+           print(f'mask {mask}')      
         attention = torch.softmax(attention, dim=-1)      
         if dropout is not None:
             attention = dropout(attention)
