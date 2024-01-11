@@ -39,6 +39,10 @@ class BilingualDataset(Dataset):
         # enc_input_tokens = self.tokenizer_src.encode(src_text).ids
         dec_input_tokens = self.tokenizer_tgt.encode(tgt_text).ids
         dec_input_tokens = dec_input_tokens[:self.seq_len]
+        
+        if len(dec_input_tokens) == 0:
+        # Return None or any appropriate value to indicate skipping
+            return None
 
         # # Add sos, eos and padding to each sentence
         # enc_num_padding_tokens = self.seq_len - len(enc_input_tokens) - 2  # We will add <s> and </s>
