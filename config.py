@@ -6,7 +6,7 @@ def get_config():
         "num_epochs": 100,
         'sliding_window_size': 128,
         "lr": 10**-4,
-        "seq_len": 768,
+        "seq_len": 512,
         "d_model": 512,
         "lang_src": "0",
         "lang_tgt": "1",

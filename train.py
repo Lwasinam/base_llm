@@ -16,8 +16,8 @@ from pathlib import Path
 # Huggingface datasets and tokenizers
 from datasets import load_dataset
 from tokenizers import Tokenizer
-from tokenizers.models import WordLevel
-from tokenizers.trainers import WordLevelTrainer
+from tokenizers.models import WordLevel, BPE
+from tokenizers.trainers import WordLevelTrainer, BpeTrainer
 from tokenizers.pre_tokenizers import Whitespace
 
 import torchmetrics
@@ -136,18 +136,17 @@ def get_all_sentences(ds, lang):
         yield item[lang]
 
 def batch_iterator(data):
-    batch_size = 1000
-    for i in range(0, len(data), batch_size):
-        yield data['train'][i : i + batch_size]        
+    for i in range(0, len(data)):
+        yield data['train'][i]['content']        
 
 
 def get_or_build_tokenizer(config, ds):
     tokenizer_path = Path(config['tokenizer_file'])
     if not Path.exists(tokenizer_path):
         # Most code taken from: https://huggingface.co/docs/tokenizers/quicktour
-        tokenizer = Tokenizer(WordLevel(unk_token="[UNK]"))
+        tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
         tokenizer.pre_tokenizer = Whitespace()
-        trainer = WordLevelTrainer(special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"], min_frequency=2)
+        trainer = BpeTrainer(special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"], min_frequency=2)
         tokenizer.train_from_iterator(batch_iterator(ds), trainer=trainer)
         tokenizer.save(str(tokenizer_path))
     else:
