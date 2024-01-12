@@ -95,7 +95,8 @@ class BilingualDataset(Dataset):
             # 'encoder_input': encoder_input,
             'decoder_input': decoder_input,
             # "encoder_mask": (encoder_input != self.pad_token).unsqueeze(0).unsqueeze(0).int(), # (1, 1, seq_len)
-            "decoder_mask": (decoder_input != self.pad_token).unsqueeze(0).int() & causal_mask(decoder_input.size(0)) & sliding_mask(decoder_input.size(0),self.sliding_window), # (1, seq_len) & (1, seq_len, seq_len),
+            "decoder_mask": (decoder_input != self.pad_token).unsqueeze(0).int() & causal_mask(decoder_input.size(0)), 
+            # & sliding_mask(decoder_input.size(0),self.sliding_window), # (1, seq_len) & (1, seq_len, seq_len),
             "label": label,  # (seq_len)
              
             # "src_text": src_text,
@@ -107,7 +108,7 @@ class BilingualDataset(Dataset):
 def causal_mask(size):
     mask = torch.triu(torch.ones((1, size, size)), diagonal=1).type(torch.int)
     return mask == 0
-def sliding_mask(size, sliding_window):
-    mask = torch.triu(torch.ones((1, size, size)), diagonal=-(sliding_window-1)).type(torch.int)
-    return mask == 1    
+# def sliding_mask(size, sliding_window):
+#     mask = torch.triu(torch.ones((1, size, size)), diagonal=-(sliding_window-1)).type(torch.int)
+#     return mask == 1    
         
