@@ -151,12 +151,12 @@ class MultiHeadAttention(nn.Module):
     def self_attention(self,query, key, value,freqs_complex_form, mask,dropout):
         #splitting query, key and value into heads
                 #this gives us a dimension of batch, num_heads, seq_len by 64. basically 1 sentence is converted to have 8 parts (heads)
-        query = query.view(query.shape[0], query.shape[1],self.head,self.head_dim)
-        key = key.view(key.shape[0], key.shape[1],self.head,self.head_dim)
+        query = query.view(query.shape[0], query.shape[1],self.head,self.head_dim).transpose(2,1)
+        key = key.view(key.shape[0], key.shape[1],self.head,self.head_dim).transpose(2,1)
         value = value.view(value.shape[0], value.shape[1],self.head,self.head_dim).transpose(2,1)
 
-        query = apply_rotary_pos_encoding(query, freqs_complex_form, self.device).transpose(2,1)
-        key = apply_rotary_pos_encoding(key, freqs_complex_form, self.device).transpose(2,1)
+        # query = apply_rotary_pos_encoding(query, freqs_complex_form, self.device).transpose(2,1)
+        # key = apply_rotary_pos_encoding(key, freqs_complex_form, self.device).transpose(2,1)
         
         attention = query @ key.transpose(3,2)
         attention = attention / math.sqrt(query.shape[-1])
@@ -308,7 +308,7 @@ class Transformer(nn.Module):
 
         freqs_complex_form = pre_compute_theta(self.d_model/self.head, self.d_model, x.shape[1], self.device)
         x = self.target_embedding(x)
-        # x = self.positional_encoding(x)
+        x = self.positional_encoding(x)
         return self.decoder(x, freqs_complex_form, tgt_mask,)
         
     def project(self, x):
