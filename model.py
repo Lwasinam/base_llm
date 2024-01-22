@@ -35,7 +35,7 @@ class RMSNorm(nn.Module):
         # Keep the dimension for broadcasting
         std = x.std(dim = -1, keepdim = True) # (batch, seq_len, 1)
         # eps is to prevent dividing by zero or when std is very small
-        print(f'mean shape {mean.squeeze(-1).shape}')
+        # print(f'mean shape {mean.squeeze(-1).shape}')
         return self.alpha * (x - mean) / (std + self.eps) + self.bias
 # class RMSNorm(nn.Module):
 
