@@ -136,7 +136,7 @@ def get_all_sentences(ds, lang):
         yield item[lang]
 
 def batch_iterator(data):
-    for i in range(0, len(data)):
+    for i in range(0, len(data['train'])):
         yield data['train'][i]['content']        
 
 
@@ -204,7 +204,7 @@ def train_model(config):
 
     #wandb initialization
     wandb.login(key = 'c20a1022142595d7d1324fdc53b3ccb34c0ded22')
-    wandb.init(project="Afri-lm", name="test1")
+    wandb.init(project="Afri-lm", name=config['project_name'])
 
     # Initialize WandB configuration
     wandb.config.epochs = config['num_epochs']

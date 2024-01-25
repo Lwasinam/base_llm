@@ -15,6 +15,7 @@ def get_config():
         "preload": None,
         "tokenizer_file": "tokenizer.json",
         "experiment_name": "runs/tmodel"
+        "project_name":"test"
     }
 
 def get_weights_file_path(config, epoch: str):
