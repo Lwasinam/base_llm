@@ -38,7 +38,6 @@ class BilingualDataset(Dataset):
         # # Transform the text into tokens
         # enc_input_tokens = self.tokenizer_src.encode(src_text).ids
         dec_input_tokens = self.tokenizer_tgt.encode(tgt_text).ids
-        print(self.tokenizer_tgt.encode("How are you").tokens)
         dec_input_tokens = dec_input_tokens[:self.seq_len]
 
         dec_num_padding_tokens = 0

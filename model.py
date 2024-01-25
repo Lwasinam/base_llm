@@ -20,45 +20,45 @@ class InputEmbeddings(nn.Module):
         # Multiply by sqrt(d_model) to scale the embeddings according to the paper
         return self.embedding(x) * math.sqrt(self.d_model)
 
-class RMSNorm(nn.Module):
-
-    def __init__(self, eps:float=10**-6) -> None:
-        super().__init__()
-        self.eps = eps
-        self.alpha = nn.Parameter(torch.ones(1)) # alpha is a learnable parameter
-        self.bias = nn.Parameter(torch.zeros(1)) # bias is a learnable parameter
-
-    def forward(self, x):
-        # x: (batch, seq_len, hidden_size)
-         # Keep the dimension for broadcasting
-        mean = x.mean(dim = -1, keepdim = True) # (batch, seq_len, 1)
-        # Keep the dimension for broadcasting
-        std = x.std(dim = -1, keepdim = True) # (batch, seq_len, 1)
-        # eps is to prevent dividing by zero or when std is very small
-        # print(f'mean shape {mean.squeeze(-1).shape}')
-        return self.alpha * (x - mean) / (std + self.eps) + self.bias
 # class RMSNorm(nn.Module):
 
-#     def __init__(self, d_model:int, eps:float=10**-8) -> None:
+#     def __init__(self, eps:float=10**-6) -> None:
 #         super().__init__()
 #         self.eps = eps
-#         self.d_model = d_model
-#         self.alpha = nn.Parameter(torch.ones(d_model)) # alpha is a learnable parameter
-#         # self.bias = nn.Parameter(torch.zeros(1)) # bias is a learnable parameter
+#         self.alpha = nn.Parameter(torch.ones(1)) # alpha is a learnable parameter
+#         self.bias = nn.Parameter(torch.zeros(1)) # bias is a learnable parameter
 
 #     def forward(self, x):
-
 #         # x: (batch, seq_len, hidden_size)
 #          # Keep the dimension for broadcasting
-#         squared_x = torch.square(x) 
-#         mean = squared_x.mean(dim = -1, keepdim = True) # (batch, seq_len, 1)
-        
+#         mean = x.mean(dim = -1, keepdim = True) # (batch, seq_len, 1)
 #         # Keep the dimension for broadcasting
-#         sqrt_mean = torch.sqrt(mean) # (batch, seq_len, 1) 
+#         std = x.std(dim = -1, keepdim = True) # (batch, seq_len, 1)
+#         # eps is to prevent dividing by zero or when std is very small
+#         # print(f'mean shape {mean.squeeze(-1).shape}')
+#         return self.alpha * (x - mean) / (std + self.eps) + self.bias
+class RMSNorm(nn.Module):
+
+    def __init__(self, d_model:int, eps:float=10**-8) -> None:
+        super().__init__()
+        self.eps = eps
+        self.d_model = d_model
+        self.alpha = nn.Parameter(torch.ones(d_model)) # alpha is a learnable parameter
+        # self.bias = nn.Parameter(torch.zeros(1)) # bias is a learnable parameter
+
+    def forward(self, x):
+
+        # x: (batch, seq_len, hidden_size)
+         # Keep the dimension for broadcasting
+        squared_x = torch.square(x) 
+        mean = squared_x.mean(dim = -1, keepdim = True) # (batch, seq_len, 1)
+        
+        # Keep the dimension for broadcasting
+        sqrt_mean = torch.sqrt(mean) # (batch, seq_len, 1) 
 
 
-#         # eps is to prevent dividing by zero or when sqrt_mean is very small
-#         return self.alpha * ((x ) / (sqrt_mean + self.eps))       
+        # eps is to prevent dividing by zero or when sqrt_mean is very small
+        return self.alpha * ((x ) / (sqrt_mean + self.eps))       
 
 
 
