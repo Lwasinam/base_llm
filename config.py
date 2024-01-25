@@ -14,7 +14,7 @@ def get_config():
         "model_basename": "tmodel_",
         "preload": None,
         "tokenizer_file": "tokenizer.json",
-        "experiment_name": "runs/tmodel"
+        "experiment_name": "runs/tmodel",
         "project_name":"test"
     }
 
