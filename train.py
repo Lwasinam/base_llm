@@ -281,10 +281,11 @@ def train_model(config):
 
             # Update the weights
             optimizer.step()
-            scheduler.step()
+            
             
 
             global_step += 1
+        scheduler.step()    
         model.eval()
         eval_loss = 0.0
         # batch_iterator = tqdm(v_dataloader, desc=f"Processing Epoch {epoch:02d}")
