@@ -25,7 +25,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 import wandb
 
-def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text,sliding_window):
+def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device, target_text,sliding_window):
     sos_idx = tokenizer_tgt.token_to_id("[SOS]")
     eos_idx = tokenizer_tgt.token_to_id("[EOS]")
     first_word = tokenizer_tgt.encode(target_text).ids[0]
@@ -90,21 +90,21 @@ def run_validation(model, validation_ds, tokenizer_tgt, max_len, device, print_m
             assert encoder_input.size(
                 0) == 1, "Batch size must be 1 for validation"
             
-            source_text = batch["src_text"][0]
+            # source_text = batch["src_text"][0]
             target_text = batch["tgt_text"][0]
-            model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_src, tokenizer_tgt, max_len, device, target_text,sliding_window)
+            model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_tgt, max_len, device, target_text,sliding_window)
 
             # source_text = batch["src_text"][0]
             # target_text = batch["tgt_text"][0]
             model_out_text = tokenizer_tgt.decode(model_out.detach().cpu().numpy())
 
-            source_texts.append(source_text)
+            # source_texts.append(source_text)
             expected.append(target_text)
             predicted.append(model_out_text)
             
             # Print the source, target and model output
             print_msg('-'*console_width)
-            print_msg(f"{f'SOURCE: ':>12}{source_text}")
+            # print_msg(f"{f'SOURCE: ':>12}{source_text}")
             print_msg(f"{f'TARGET: ':>12}{target_text}")
             print_msg(f"{f'PREDICTED: ':>12}{model_out_text}")
 
@@ -241,11 +241,12 @@ def train_model(config):
         global_step = state['global_step']
 
     loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_tgt.token_to_id("[PAD]"), label_smoothing=0.1).to(device)
- 
+   
     for epoch in range(initial_epoch, config['num_epochs']):
         model.train()
         batch_iterator = tqdm(train_dataloader, desc=f"Processing Epoch {epoch:02d}")
         for batch in batch_iterator:
+            run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, config['sliding_window_size'])
             optimizer.zero_grad()
 
             # encoder_input = batch['encoder_input'].to(device) # (b, seq_len)
