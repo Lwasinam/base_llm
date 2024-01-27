@@ -227,7 +227,7 @@ def train_model(config):
     writer = SummaryWriter(config['experiment_name'])
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'], eps=1e-9)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.1)
+   
 
     # If the user specified a model to preload before training, load it
     initial_epoch = 0
@@ -285,7 +285,7 @@ def train_model(config):
             
 
             global_step += 1
-        scheduler.step()    
+           
         model.eval()
         eval_loss = 0.0
         # batch_iterator = tqdm(v_dataloader, desc=f"Processing Epoch {epoch:02d}")
