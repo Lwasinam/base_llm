@@ -41,7 +41,8 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
         if decoder_input.size(1) == max_len:
             break
         # build mask for target
-        decoder_mask = (causal_mask(decoder_input.size(1)) & sliding_mask(decoder_input.size(1),sliding_window)).type_as(source_mask).to(device)
+        decoder_mask = (causal_mask(decoder_input.size(1))).type_as(source_mask).to(device) 
+        # & sliding_mask(decoder_input.size(1),sliding_window)
       
 
         # calculate output
@@ -62,7 +63,7 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
     return decoder_input.squeeze(0)
 
 
-def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len, device, print_msg, global_step,sliding_window,num_examples=2):
+def run_validation(model, validation_ds, tokenizer_tgt, max_len, device, print_msg, global_step,sliding_window,num_examples=2):
     model.eval()
     count = 0
 
@@ -314,8 +315,7 @@ def train_model(config):
         wandb.log({"Epoch": epoch, "Validation Loss": avg_val_loss.item()})
 
 
-        # Run validation at the end of every epoch
-        run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, config['sliding_window_size'])
+
 
         # Save the model at the end of every epoch
         model_filename = get_weights_file_path(config, f"{epoch:02d}")
@@ -325,6 +325,9 @@ def train_model(config):
             'optimizer_state_dict': optimizer.state_dict(),
             'global_step': global_step
         }, model_filename)
+
+                # Run validation at the end of every epoch
+        run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, config['sliding_window_size'])
 
 
 if __name__ == '__main__':
