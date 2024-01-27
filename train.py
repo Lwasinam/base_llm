@@ -227,6 +227,7 @@ def train_model(config):
     writer = SummaryWriter(config['experiment_name'])
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'], eps=1e-9)
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.1)
 
     # If the user specified a model to preload before training, load it
     initial_epoch = 0
@@ -246,7 +247,7 @@ def train_model(config):
         model.train()
         batch_iterator = tqdm(train_dataloader, desc=f"Processing Epoch {epoch:02d}")
         for batch in batch_iterator:
-            run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, config['sliding_window_size'])
+            # run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, config['sliding_window_size'])
             optimizer.zero_grad()
 
             # encoder_input = batch['encoder_input'].to(device) # (b, seq_len)
@@ -280,6 +281,7 @@ def train_model(config):
 
             # Update the weights
             optimizer.step()
+            scheduler.step()
             
 
             global_step += 1
