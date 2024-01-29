@@ -37,30 +37,40 @@ class InputEmbeddings(nn.Module):
 #         # eps is to prevent dividing by zero or when std is very small
 #         # print(f'mean shape {mean.squeeze(-1).shape}')
 #         return self.alpha * (x - mean) / (std + self.eps) + self.bias
-class RMSNorm(nn.Module):
+# class RMSNorm(nn.Module):
 
-    def __init__(self, d_model:int, eps:float=10**-8) -> None:
+#     def __init__(self, d_model:int, eps:float=10**-8) -> None:
+#         super().__init__()
+#         self.eps = eps
+#         self.d_model = d_model
+#         self.alpha = nn.Parameter(torch.ones(d_model)) # alpha is a learnable parameter
+#         # self.bias = nn.Parameter(torch.zeros(1)) # bias is a learnable parameter
+
+#     def forward(self, x):
+
+#         # x: (batch, seq_len, hidden_size)
+#          # Keep the dimension for broadcasting
+#         squared_x = torch.square(x) 
+#         mean = squared_x.mean(dim = -1, keepdim = True) # (batch, seq_len, 1)
+        
+#         # Keep the dimension for broadcasting
+#         sqrt_mean = torch.sqrt(mean) # (batch, seq_len, 1) 
+
+
+#         # eps is to prevent dividing by zero or when sqrt_mean is very small
+#         return self.alpha * ((x ) / (sqrt_mean + self.eps))
+
+class RMSNorm(nn.Module):
+    def __init__(self, dim: int, eps: float = 1e-6):
         super().__init__()
         self.eps = eps
-        self.d_model = d_model
-        self.alpha = nn.Parameter(torch.ones(d_model)) # alpha is a learnable parameter
-        # self.bias = nn.Parameter(torch.zeros(1)) # bias is a learnable parameter
+        # The gamma parameter
+        self.weight = nn.Parameter(torch.ones(dim))
 
-    def forward(self, x):
-
-        # x: (batch, seq_len, hidden_size)
-         # Keep the dimension for broadcasting
-        squared_x = torch.square(x) 
-        mean = squared_x.mean(dim = -1, keepdim = True) # (batch, seq_len, 1)
-        
-        # Keep the dimension for broadcasting
-        sqrt_mean = torch.sqrt(mean) # (batch, seq_len, 1) 
-
-
-        # eps is to prevent dividing by zero or when sqrt_mean is very small
-        return self.alpha * ((x ) / (sqrt_mean + self.eps))       
-
-
+    def _norm(self, x: torch.Tensor):
+        # (B, Seq_Len, Dim) * (B, Seq_Len, 1) = (B, Seq_Len, Dim)
+        # rsqrt: 1 / sqrt(x)
+        return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)
 
 class PositionEncoding(nn.Module):
     def __init__(self, seq_len: int, d_model:int, batch: int) -> None:
