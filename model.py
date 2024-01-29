@@ -321,10 +321,10 @@ def build_transformer(seq_len, batch, target_vocab_size,  d_model, device)-> Tra
 
     transformer = Transformer(seq_len, batch,  d_model,  target_vocab_size, device )
 
-      #Initialize the parameters
-    for p in transformer.parameters():
-        if p.dim() > 1:
-            nn.init.xavier_uniform_(p)
+    #   #Initialize the parameters
+    # for p in transformer.parameters():
+    #     if p.dim() > 1:
+    #         nn.init.xavier_uniform_(p)
     return transformer         
 
 
