@@ -71,6 +71,9 @@ class RMSNorm(nn.Module):
         # (B, Seq_Len, Dim) * (B, Seq_Len, 1) = (B, Seq_Len, Dim)
         # rsqrt: 1 / sqrt(x)
         return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)
+    def forward(self, x: torch.Tensor):
+        # (Dim) * (B, Seq_Len, Dim) = (B, Seq_Len, Dim)
+        return self.weight * self._norm(x.float()).type_as(x)
 
 class PositionEncoding(nn.Module):
     def __init__(self, seq_len: int, d_model:int, batch: int) -> None:
