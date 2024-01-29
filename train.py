@@ -19,6 +19,7 @@ from tokenizers import Tokenizer
 from tokenizers.models import WordLevel, BPE
 from tokenizers.trainers import WordLevelTrainer, BpeTrainer
 from tokenizers.pre_tokenizers import Whitespace
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 import torchmetrics
 from torch.utils.tensorboard import SummaryWriter
@@ -142,17 +143,19 @@ def batch_iterator(data):
 
 
 def get_or_build_tokenizer(config, ds):
-    tokenizer_path = Path(config['tokenizer_file'])
-    if not Path.exists(tokenizer_path):
-        # Most code taken from: https://huggingface.co/docs/tokenizers/quicktour
-        tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
-        tokenizer.pre_tokenizer = Whitespace()
-        trainer = BpeTrainer(special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"], min_frequency=2)
-        tokenizer.train_from_iterator(batch_iterator(ds), trainer=trainer)
-        tokenizer.save(str(tokenizer_path))
-    else:
-        tokenizer = Tokenizer.from_file(str(tokenizer_path))
+    tokenizer = AutoTokenizer.from_pretrained("castorini/afriteva_base")
     return tokenizer
+    # tokenizer_path = Path(config['tokenizer_file'])
+    # if not Path.exists(tokenizer_path):
+    #     # Most code taken from: https://huggingface.co/docs/tokenizers/quicktour
+    #     tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
+    #     tokenizer.pre_tokenizer = Whitespace()
+    #     trainer = BpeTrainer(special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"], min_frequency=2)
+    #     tokenizer.train_from_iterator(batch_iterator(ds), trainer=trainer)
+    #     tokenizer.save(str(tokenizer_path))
+    # else:
+    #     tokenizer = Tokenizer.from_file(str(tokenizer_path))
+    # return tokenizer
 
 def get_ds(config):
     # It only has the train split, so we divide it overselves
