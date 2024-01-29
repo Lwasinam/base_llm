@@ -226,7 +226,7 @@ def train_model(config):
     # Tensorboard
     writer = SummaryWriter(config['experiment_name'])
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'], eps=1e-12, weight_decay=0.1)
+    optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'],betas=(0.9, 0.95), eps=1e-7, weight_decay=0.1)
    
 
     # If the user specified a model to preload before training, load it
