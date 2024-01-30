@@ -227,7 +227,7 @@ def train_model(config):
     Path(config['model_folder']).mkdir(parents=True, exist_ok=True)
 
     train_dataloader, val_dataloader, tokenizer_tgt = get_ds(config)
-    model = get_model(config, tokenizer_tgt.get_vocab_size(), device).to(device)
+    model = get_model(config, len(tokenizer_tgt), device).to(device)
 
     #no of params
     print(f'The model has {count_parameters(model):,} trainable parameters')
@@ -249,7 +249,7 @@ def train_model(config):
         optimizer.load_state_dict(state['optimizer_state_dict'])
         global_step = state['global_step']
 
-    loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_tgt.token_to_id("[PAD]"), label_smoothing=0.1).to(device)
+    loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_tgt.pad_token_id, label_smoothing=0.1).to(device)
    
     for epoch in range(initial_epoch, config['num_epochs']):
         model.train()
@@ -276,7 +276,7 @@ def train_model(config):
 
             # Compute the loss using a simple cross entropy
        
-            loss = loss_fn(proj_output.view(-1, tokenizer_tgt.get_vocab_size()), label.view(-1))
+            loss = loss_fn(proj_output.view(-1,len(tokenizer_tgt)), label.view(-1))
             batch_iterator.set_postfix({"loss": f"{loss.item():6.3f}"})
             wandb.log({"Training Loss": loss.item(), "Global Step": global_step})
 
@@ -319,7 +319,7 @@ def train_model(config):
 
                 # Compute the loss using a simple cross entropy
         
-                eval_loss += loss_fn(proj_output.view(-1, tokenizer_tgt.get_vocab_size()), label.view(-1))
+                eval_loss += loss_fn(proj_output.view(-1, len(tokenizer_tgt)), label.view(-1))
            
                 
         avg_val_loss = eval_loss / len(val_dataloader)
