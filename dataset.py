@@ -14,9 +14,9 @@ class BilingualDataset(Dataset):
         self.tgt_lang = tgt_lang
         self.sliding_window = sliding_window
 
-        self.sos_token = torch.tensor([tokenizer_tgt.token_to_id("[SOS]")], dtype=torch.int64)
-        self.eos_token = torch.tensor([tokenizer_tgt.token_to_id("[EOS]")], dtype=torch.int64)
-        self.pad_token = torch.tensor([tokenizer_tgt.token_to_id("[PAD]")], dtype=torch.int64)
+        self.sos_token = torch.tensor([tokenizer_tgt.bos_token_id], dtype=torch.int64)
+        self.eos_token = torch.tensor([tokenizer_tgt.eos_token_id], dtype=torch.int64)
+        self.pad_token = torch.tensor([tokenizer_tgt.pad_token_id], dtype=torch.int64)
 
     def __len__(self):
         return len(self.ds)
@@ -37,7 +37,7 @@ class BilingualDataset(Dataset):
 
         # # Transform the text into tokens
         # enc_input_tokens = self.tokenizer_src.encode(src_text).ids
-        dec_input_tokens = self.tokenizer_tgt.encode(tgt_text).ids
+        dec_input_tokens = self.tokenizer_tgt.encode(tgt_text)
         dec_input_tokens = dec_input_tokens[:self.seq_len]
 
         dec_num_padding_tokens = 0
