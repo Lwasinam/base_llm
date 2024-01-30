@@ -27,9 +27,9 @@ from torch.utils.tensorboard import SummaryWriter
 import wandb
 
 def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device, target_text,sliding_window):
-    sos_idx = tokenizer_tgt.token_to_id("[SOS]")
-    eos_idx = tokenizer_tgt.token_to_id("[EOS]")
-    first_word = tokenizer_tgt.encode(target_text).ids[0]
+    sos_idx = tokenizer_tgt.bos_token_id
+    eos_idx = tokenizer_tgt.eos_token_id
+    first_word = tokenizer_tgt.encode(target_text)[0]
 
     # Precompute the encoder output and reuse it for every step
     # encoder_output = model.encode(source, source_mask)
@@ -143,7 +143,12 @@ def batch_iterator(data):
 
 
 def get_or_build_tokenizer(config, ds):
-    tokenizer = AutoTokenizer.from_pretrained("castorini/afriteva_base")
+    tokenizer = AutoTokenizer.from_pretrained("castorini/afriteva_v2_large")
+    model = AutoModelForSeq2SeqLM.from_pretrained("castorini/afriteva_v2_large")
+    special_tokens_dict = {"eos_token": "<EOS>", "bos_token": "<SOS>","pad_token": "<PAD>", 'unk_token':'<UNK>'}
+
+    tokenizer.add_special_tokens(special_tokens_dict)
+    model.resize_token_embeddings(len(tokenizer))
     return tokenizer
     # tokenizer_path = Path(config['tokenizer_file'])
     # if not Path.exists(tokenizer_path):
