@@ -143,8 +143,8 @@ def batch_iterator(data):
 
 
 def get_or_build_tokenizer(config, ds):
-    tokenizer = AutoTokenizer.from_pretrained("castorini/afriteva_v2_large")
-    model = AutoModelForSeq2SeqLM.from_pretrained("castorini/afriteva_v2_large")
+    tokenizer = AutoTokenizer.from_pretrained("castorini/afriteva_v2_base")
+    model = AutoModelForSeq2SeqLM.from_pretrained("castorini/afriteva_v2_base")
     special_tokens_dict = {"eos_token": "<EOS>", "bos_token": "<SOS>","pad_token": "<PAD>", 'unk_token':'<UNK>'}
 
     tokenizer.add_special_tokens(special_tokens_dict)
