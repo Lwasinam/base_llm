@@ -25,6 +25,10 @@ import torchmetrics
 from torch.utils.tensorboard import SummaryWriter
 
 import wandb
+import accelerate
+from accelerate import Accelerator
+
+accelerator = Accelerator()
 
 def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device, target_text,sliding_window):
     sos_idx = tokenizer_tgt.bos_token_id
@@ -227,7 +231,8 @@ def train_model(config):
     Path(config['model_folder']).mkdir(parents=True, exist_ok=True)
 
     train_dataloader, val_dataloader, tokenizer_tgt = get_ds(config)
-    model = get_model(config, len(tokenizer_tgt), device).to(device)
+    # model = get_model(config, len(tokenizer_tgt), device).to(device)
+    model = get_model(config, len(tokenizer_tgt), device)
 
     #no of params
     print(f'The model has {count_parameters(model):,} trainable parameters')
@@ -235,6 +240,10 @@ def train_model(config):
     writer = SummaryWriter(config['experiment_name'])
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'],betas=(0.9, 0.95), eps=1e-6)
+
+    train_dataloader, eval_dataloader, model, optimizer = accelerator.prepare(
+    train_dataloader, eval_dataloader, model, optimizer
+ )
    
 
     # If the user specified a model to preload before training, load it
@@ -284,8 +293,10 @@ def train_model(config):
             writer.add_scalar('train loss', loss.item(), global_step)
             writer.flush()
 
-            # Backpropagate the loss
-            loss.backward()
+            # # Backpropagate the loss
+            # loss.backward()
+
+            accelerator.backward(loss)
 
             # Update the weights
             optimizer.step()
