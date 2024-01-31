@@ -297,7 +297,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int,device:str, head: int = 8, d_ff: int =  2048, number_of_block: int = 2) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int,device:str, head: int = 8, d_ff: int =  1024, number_of_block: int = 2) -> None:
         super(Transformer, self).__init__()
         # self.encoder = Encoder(number_of_block,d_model, head, d_ff )
         print(f'no. of layers {number_of_block}')
