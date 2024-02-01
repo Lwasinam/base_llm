@@ -241,8 +241,8 @@ def train_model(config):
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'],betas=(0.9, 0.95), eps=1e-6)
 
-    train_dataloader, eval_dataloader, model, optimizer = accelerator.prepare(
-    train_dataloader, eval_dataloader, model, optimizer
+    train_dataloader, val_dataloader, model, optimizer = accelerator.prepare(
+    train_dataloader, val_dataloader, model, optimizer
  )
    
 
