@@ -224,7 +224,8 @@ def train_model(config):
     wandb.config.batch_size = config['batch_size']
     wandb.config.learning_rate = config['lr']  
     # Define the device
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = accelerator.device 
+    # torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
 
     # Make sure the weights folder exists
@@ -232,7 +233,7 @@ def train_model(config):
 
     train_dataloader, val_dataloader, tokenizer_tgt = get_ds(config)
     # model = get_model(config, len(tokenizer_tgt), device).to(device)
-    model = get_model(config, len(tokenizer_tgt), device)
+    model = get_model(config, len(tokenizer_tgt), device).to(device)
 
     #no of params
     print(f'The model has {count_parameters(model):,} trainable parameters')
