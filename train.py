@@ -28,7 +28,7 @@ import wandb
 import accelerate
 from accelerate import Accelerator
 
-accelerator = Accelerator()
+
 
 def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device, target_text,sliding_window):
     sos_idx = tokenizer_tgt.bos_token_id
@@ -214,7 +214,7 @@ def count_parameters(model):
 
 
 def train_model(config):
-
+    accelerator = Accelerator()
     #wandb initialization
     wandb.login(key = 'c20a1022142595d7d1324fdc53b3ccb34c0ded22')
     wandb.init(project="Afri-lm", name=config['project_name'])
